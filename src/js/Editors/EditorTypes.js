@@ -51,7 +51,8 @@ export default {
 		title: 'RSVP',
 		icon: 'calendar-check',
 		components: [
-			{ type: 'in-reply-to', required: true, label: 'RSVP to' },
+			{ type: 'in-reply-to', required: true, label: 'RSVP to', search: true },
+			{ type: 'name' },
 			{ type: 'rsvp', required: true },
 			{ type: 'content' },
 			{ type: 'category' }
