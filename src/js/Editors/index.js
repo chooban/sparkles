@@ -177,18 +177,16 @@ const Editor = ({ attrs }) => {
 									onclick: async (e) => {
 										e && e.preventDefault()
 										state.fetching = true
-										try {
-											const res = await m
-												.request({
-													method: 'GET',
-													url: '/api/opengraph',
-													params: { url: state[c.type] }
-												})
-											state.name = res.title
-										} catch(err) {
-											Alert.error(err)
-										}
+										const res = await m
+											.request({
+												method: 'GET',
+												url: '/api/cardyb',
+												params: { url: state[c.type] }
+											})
+										state.name = res.title
+										state.content = res.description
 										state.fetching = false
+										// state.photo = res.image || state.photo
 									},
 									disabled: !state[c.type] || state.fetching
 								}, state.fetching ? m(Icon, { name: 'spinner', className: 'spin' }) : m(Icon, { name: 'magnifying-glass', label: 'get page title' }))
