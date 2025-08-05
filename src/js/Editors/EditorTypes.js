@@ -55,6 +55,7 @@ export default {
 			{ type: 'name' },
 			{ type: 'rsvp', required: true },
 			{ type: 'content' },
+			// { type: 'photo' },
 			{ type: 'category' }
 		]
 	},
