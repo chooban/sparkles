@@ -54,7 +54,16 @@ m.route(document.body, '/', {
 	'/settings': AuthLayout(SettingsPage),
 	// editors
 	'/new/note': AuthLayout(NoteEditor),
-	'/new/photo': AuthLayout(PhotoEditor),
+	'/new/photo': {
+		onmatch: () => {
+			return AuthLayout(PhotoEditor).onmatch
+		},
+		render: (vnode) => {
+			const image = m.route.param('image')
+			vnode.key = image
+			return m(DefaultLayout, vnode)
+		}
+	},
 	'/new/image': AuthLayout(ImageEditor),
 	'/new/article': AuthLayout(ArticleEditor),
 	'/new/bookmark': AuthLayout(BookmarkEditor),

@@ -185,12 +185,45 @@ a {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-gap: .75em;
+	
+	.gallery-container {
+		position: relative;
+	}
+	
+	.gallery-container.current-image {
+		border: thin dashed var(--sprk-border-color);
+	}
+	
+	.gallery-container i {
+		font-size: x-large;
+		color: white;
+		filter: drop-shadow(3px 3px 2px grey);
+	}
+
+	.gallery-container .close {
+		position: absolute;
+		top: 1px;
+		right: 1px;
+	}
+
+	.gallery-container .move-left {
+		position: absolute;
+		top: calc(50% - 0.5rem);
+		left: 1px;
+	}
+	
+	.gallery-container .move-right {
+		position: absolute;
+		top: calc(50% - 0.5rem);
+		right: 1px;
+	}
 
 	img {
 		object-fit: cover;
 		width: 100%;
 		max-height: 150px;
 		aspect-ratio: 1 / 1;
+		display: block;
 	}
 }
 

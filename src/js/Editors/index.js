@@ -41,8 +41,8 @@ const Editor = ({ attrs }) => {
 		const cacheable = ['name', 'content', 'category']
 		cacheable.forEach(key => state[key] = FormCache.get(key))
 
-		const media = Store.get('media')
-		const mediaConfigIdx = media.findIndex(m => m.url === params.image)
+		const media = Store.getCache('media') || []
+		const mediaConfigIdx = media.findIndex(m => m?.url && m.url === params.image)
 
 		if (mediaConfigIdx > -1) {
 			const mediaConfig = media[mediaConfigIdx]
@@ -61,12 +61,12 @@ const Editor = ({ attrs }) => {
 			}
 		}
 		if (state.photo) {
-			properties.photo = [
-				state.alt ? {
-					value: state.photo,
-					alt: state.alt
-				} : state.photo
-			]
+			// We may be attaching more than one photo, so use the cache.
+			const media = Store.getCache('media')
+			properties.photo = media.map(m => ({
+				alt: m.alt,
+				value: m.url,
+			}))
 		}
 		if (state.category) {
 			// Split by comma, trim whitespace and get rid of empty items from array
@@ -119,15 +119,14 @@ const Editor = ({ attrs }) => {
 	}
 
 	const handleAltInput = (value) => {
-		const currentImageUrl = state['url']
+		const currentImageUrl = state['photo']
 		if (currentImageUrl) {
-			const media = Store.getCache('media')
+			const media = Store.getCache('media') || []
 			const mediaConfigIdx = media.findIndex(m => m.url === currentImageUrl)
 
 			if (mediaConfigIdx > -1) {
-				const mediaConfig = media[mediaConfigIdx]
-				mediaConfig.alt = value
-				// media[mediaConfigIdx] = mediaConfig
+				media[mediaConfigIdx].alt = value
+				Store.addToCache({ media: media.filter(i => !!i) })
 			}
 		}
 		state['alt'] = value
@@ -172,8 +171,6 @@ const Editor = ({ attrs }) => {
 							m('li', m('input', {
 								type: 'text',
 								placeholder: 'Alt text',
-								// TODO: This should write the alt back to the store with the photo
-								// Should this be disabled until a photo exists?
 								oninput: e => handleAltInput(e.target.value),
 								value: state.alt || ''
 							}))
