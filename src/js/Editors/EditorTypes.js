@@ -16,6 +16,7 @@ export default {
 			{ type: 'photo', required: true },
 			{ type: 'name' },
 			{ type: 'content' },
+			{ type: 'gallery' },
 			{ type: 'category' }
 		]
 	},

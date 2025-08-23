@@ -8,6 +8,7 @@ import Proxy from '../Controllers/Proxy'
 import Store from '../Models/Store'
 import FormCache from '../Models/FormCache'
 import EditorTypes from './EditorTypes'
+import Gallery from '../Components/Gallery'
 
 const Editor = ({ attrs }) => {
 	const parameterList = new URLSearchParams(window.location.search)
@@ -36,8 +37,16 @@ const Editor = ({ attrs }) => {
 	}
 	if (params.image) {
 		state.photo = params.image
-		const cacheable = ['name', 'alt', 'content', 'category']
+		const cacheable = ['name', 'content', 'category']
 		cacheable.forEach(key => state[key] = FormCache.get(key))
+
+		const media = Store.getCache('media') || []
+		const mediaConfigIdx = media.findIndex(m => m?.url && m.url === params.image)
+
+		if (mediaConfigIdx > -1) {
+			const mediaConfig = media[mediaConfigIdx]
+			state['alt'] = mediaConfig.alt
+		}
 	} else {
 		FormCache.clear()
 	}
@@ -51,12 +60,12 @@ const Editor = ({ attrs }) => {
 			}
 		}
 		if (state.photo) {
-			properties.photo = [
-				state.alt ? {
-					value: state.photo,
-					alt: state.alt
-				} : state.photo
-			]
+			// We may be attaching more than one photo, so use the cache.
+			const media = Store.getCache('media')
+			properties.photo = media.map(m => ({
+				alt: m.alt,
+				value: m.url,
+			}))
 		}
 		if (state.category) {
 			// Split by comma, trim whitespace and get rid of empty items from array
@@ -108,6 +117,21 @@ const Editor = ({ attrs }) => {
 		FormCache.put(key, value)
 	}
 
+	const handleAltInput = (value) => {
+		const currentImageUrl = state['photo']
+		if (currentImageUrl) {
+			const media = Store.getCache('media') || []
+			const mediaConfigIdx = media.findIndex(m => m.url === currentImageUrl)
+
+			if (mediaConfigIdx > -1) {
+				media[mediaConfigIdx].alt = value
+				Store.addToCache({ media: media.filter(i => !!i) })
+			}
+		}
+		state['alt'] = value
+		FormCache.put('alt', value)
+	}
+
 	return {
 		view: () =>
 			m(Box, {
@@ -146,10 +170,12 @@ const Editor = ({ attrs }) => {
 							m('li', m('input', {
 								type: 'text',
 								placeholder: 'Alt text',
-								oninput: e => handleInput('alt', e.target.value),
+								oninput: e => handleAltInput(e.target.value),
 								value: state.alt || ''
 							}))
 						])
+					case 'gallery':
+						return m(Gallery)
 					case 'content':
 						return m('textarea', {
 							rows: 5,
