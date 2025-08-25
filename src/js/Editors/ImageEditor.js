@@ -1,4 +1,5 @@
 import m from 'mithril'
+import { isHeic, heicTo } from 'heic-to'
 
 import Alert from '../Components/Alert'
 import { Box } from '../Components/Box'
@@ -12,15 +13,25 @@ const ImageEditor = () => {
 	let loading = false, image, preview, uploaded
 	const mediaEndpoint = Store.getSession('media-endpoint')
 
-	const loadImage = e => {
+	const loadImage = async (e) => {
 		const [ file ] = e.target.files
 		if (file) {
 			if (file.size > 2621440) {
 				preview = image = null
 				return Alert.error('max file size is 2MB')
 			}
-			image = file
-			preview = URL.createObjectURL(file)
+			const fileIsHeic = await isHeic(file)
+			if (fileIsHeic) {
+				const jpeg = await heicTo({
+					blob: file,
+					type: 'image/jpeg',
+					quality: 0.8
+				})
+				image = jpeg
+			} else {
+				image = file
+			}
+			preview = URL.createObjectURL(image)
 			uploaded = null
 		}
 	}
