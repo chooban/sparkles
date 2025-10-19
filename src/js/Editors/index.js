@@ -9,6 +9,7 @@ import Proxy from '../Controllers/Proxy'
 import Store from '../Models/Store'
 import FormCache from '../Models/FormCache'
 import EditorTypes from './EditorTypes'
+import Gallery from '../Components/Gallery'
 
 const Editor = ({ attrs }) => {
 	const parameterList = new URLSearchParams(window.location.search)
@@ -37,8 +38,16 @@ const Editor = ({ attrs }) => {
 	}
 	if (params.image) {
 		state.photo = params.image
-		const cacheable = ['name', 'alt', 'content', 'category']
+		const cacheable = ['name', 'content', 'category']
 		cacheable.forEach(key => state[key] = FormCache.get(key))
+
+		const media = Store.get('media')
+		const mediaConfigIdx = media.findIndex(m => m.url === params.image)
+
+		if (mediaConfigIdx > -1) {
+			const mediaConfig = media[mediaConfigIdx]
+			state['alt'] = mediaConfig.alt
+		}
 	} else {
 		FormCache.clear()
 	}
@@ -109,6 +118,22 @@ const Editor = ({ attrs }) => {
 		FormCache.put(key, value)
 	}
 
+	const handleAltInput = (value) => {
+		const currentImageUrl = state['url']
+		if (currentImageUrl) {
+			const media = Store.getCache('media')
+			const mediaConfigIdx = media.findIndex(m => m.url === currentImageUrl)
+
+			if (mediaConfigIdx > -1) {
+				const mediaConfig = media[mediaConfigIdx]
+				mediaConfig.alt = value
+				// media[mediaConfigIdx] = mediaConfig
+			}
+		}
+		state['alt'] = value
+		FormCache.put('alt', value)
+	}
+
 	return {
 		view: () =>
 			m(Box, {
@@ -147,10 +172,14 @@ const Editor = ({ attrs }) => {
 							m('li', m('input', {
 								type: 'text',
 								placeholder: 'Alt text',
-								oninput: e => handleInput('alt', e.target.value),
+								// TODO: This should write the alt back to the store with the photo
+								// Should this be disabled until a photo exists?
+								oninput: e => handleAltInput(e.target.value),
 								value: state.alt || ''
 							}))
 						])
+					case 'gallery':
+						return m(Gallery)
 					case 'content':
 						return m('textarea', {
 							rows: 5,
