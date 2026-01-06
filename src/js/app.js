@@ -20,6 +20,7 @@ import {
 	NoteEditor,
 	PhotoEditor,
 	ReplyEditor,
+	RepostEditor,
 	RSVPEditor
 } from './Editors'
 import ImageEditor from './Editors/ImageEditor'
@@ -58,6 +59,7 @@ m.route(document.body, '/', {
 	'/new/article': AuthLayout(ArticleEditor),
 	'/new/bookmark': AuthLayout(BookmarkEditor),
 	'/new/reply': AuthLayout(ReplyEditor),
+	'/new/repost': AuthLayout(RepostEditor),
 	'/new/like': AuthLayout(LikeEditor),
 	'/new/rsvp': AuthLayout(RSVPEditor),
 	'/new/movie': AuthLayout(MovieEditor),

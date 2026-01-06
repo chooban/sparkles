@@ -37,6 +37,15 @@ const ReplyTile = {
 		})
 }
 
+const RepostTile = {
+	view: ({ attrs }) =>
+		m(Tile, {
+			href: `/new/repost${attrs.params ? '?' + attrs.params : ''}`,
+			icon: 'share-network',
+			name: attrs?.name || 'Repost'
+		})
+}
+
 const PhotoTile = {
 	view: () => m(Tile, {
 		href: '/new/photo',
@@ -98,6 +107,7 @@ const PostTypes = {
 	note: NoteTile,
 	photo: PhotoTile,
 	reply: ReplyTile,
+	repost: RepostTile,
 	bookmark: BookmarkTile,
 	like: LikeTile,
 	article: ArticleTile,
@@ -110,7 +120,7 @@ const PostTypes = {
 
 const Tiles = (types, defaultTiles, params) => {
 	if (!defaultTiles || !defaultTiles.length) {
-		defaultTiles = [ 'note', 'photo', 'reply', 'bookmark', 'like', 'article', 'rsvp', 'watch', 'read', 'listen', 'game' ]
+		defaultTiles = [ 'note', 'photo', 'reply', 'repost', 'bookmark', 'like', 'article', 'rsvp', 'watch', 'read', 'listen', 'game' ]
 	}
 	if (!types || !types.length) {
 		types = defaultTiles.map(t => ({ type: t }))

@@ -69,5 +69,14 @@ export default {
 			{ type: 'content' },
 			{ type: 'category' }
 		]
+	},
+	Repost: {
+		title: 'Repost',
+		icon: 'share-network',
+		components: [
+			{ type: 'repost-of', required: true, label: 'Repost of' },
+			{ type: 'content' },
+			{ type: 'category' }
+		]
 	}
 }

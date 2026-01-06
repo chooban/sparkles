@@ -37,7 +37,7 @@ const SharePage = () => {
 					m('b', 'url:'),
 					params.url
 				]),
-				m(Tiles(postTypes, [ 'reply', 'bookmark', 'like', 'rsvp' ], parameterList.toString()))
+				m(Tiles(postTypes, [ 'reply', 'repost', 'bookmark', 'like', 'rsvp' ], parameterList.toString()))
 			])
 	}
 }

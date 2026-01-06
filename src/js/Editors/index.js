@@ -190,6 +190,7 @@ const Editor = ({ attrs }) => {
 						})
 					case 'bookmark-of':
 					case 'in-reply-to':
+					case 'repost-of':
 					case 'like-of':
 						return m('ul', [
 							m('li', [
@@ -258,6 +259,7 @@ const NoteEditor = { view: () => m(Editor, EditorTypes.Note) }
 const PhotoEditor = { view: () => m(Editor, EditorTypes.Photo) }
 const ArticleEditor = { view: () => m(Editor, EditorTypes.Article) }
 const BookmarkEditor = { view: () => m(Editor, EditorTypes.Bookmark) }
+const RepostEditor = { view: () => m(Editor, EditorTypes.Repost) }
 const ReplyEditor = { view: () => m(Editor, EditorTypes.Reply) }
 const RSVPEditor = { view: () => m(Editor, EditorTypes.RSVP) }
 const LikeEditor = { view: () => m(Editor, EditorTypes.Like) }
@@ -268,6 +270,7 @@ export {
 	ArticleEditor,
 	BookmarkEditor,
 	ReplyEditor,
+	RepostEditor,
 	RSVPEditor,
 	LikeEditor
 }
