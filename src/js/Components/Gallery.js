@@ -92,24 +92,42 @@ const GalleryImage = (src, onClose, onMove, shouldHighlight) => {
 		view: function() {
 			return m('div', {class: `gallery-container ${shouldHighlight ? 'current-image' : ''}` },
 				m('img', { src }),
-				m('i.fas.fa-circle-xmark', {
+				m('svg', {
 					class: 'close',
+					height: 20,
+					width: 20,
+					'aria-label': 'remove image from gallery',
+					'aria-hidden': 'false',
 					onclick: () => {
 						onClose(src)
 					}
-				}),
-				m('i.fas.fa-caret-right', {
+				}, m('use', {
+					href: '/assets/phosphor/icons.svg#trash',
+				})),
+				m('svg', {
 					class: 'move-right',
+					height: 20,
+					width: 20,
+					'aria-label': 'move image one place right',
+					'aria-hidden': 'false',
 					onclick: () => {
 						onMove(src, 1)
 					}
-				}),
-				m('i.fas.fa-caret-left', {
+				}, m('use', {
+					href: '/assets/phosphor/icons.svg#arrow-square-right',
+				})),
+				m('svg', {
 					class: 'move-left',
+					height: 20,
+					width: 20,
+					'aria-label': 'move image one place left',
+					'aria-hidden': 'false',
 					onclick: () => {
 						onMove(src, -1)
 					}
-				}),
+				}, m('use', {
+					href: '/assets/phosphor/icons.svg#arrow-square-left',
+				})),
 			)
 		}
 	}
