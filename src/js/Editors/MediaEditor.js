@@ -80,8 +80,8 @@ const MediaEditor = ({ attrs }) => {
 				],
 				// custom properties
 				...(state.progress && { progress: [ state.progress ] }),
+				...(state.content && { content: [ state.content ] }),
 				...(state.progress == 'finished' && {
-					...(state.content && { content: [ state.content ] }),
 					...(rating && state.rating > 0 && { rating: [ state.rating ] }),
 					...(rewatched && { rewatch: [ state.rewatched === true ] })
 				}),
@@ -230,6 +230,17 @@ const MediaEditor = ({ attrs }) => {
 							value: state.progress = state.progress
 						}, attrs.progress?.map(({key, label}) => m('option', { value: key }, label)))
 					]),
+					state.progress != 'finished' && [
+						m('label', [
+							`${attrs.progress?.find(p => p.key == state.progress).label || ''}`,
+						]),
+						m('textarea', {
+							rows: 3,
+							placeholder: 'Add your comments...',
+							oninput: e => state.content = e.target.value,
+							value: state.content || ''
+						}),
+					],
 					state.progress == 'finished' && [
 						m('label', [
 							`${attrs.progress?.find(p => p.key == 'finished').label || ''} on`,
